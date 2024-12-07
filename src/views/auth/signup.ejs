@@ -250,19 +250,6 @@
                     },
                 }).showToast();
             }
-
-            const errors = "<%= errors  %>";
-            console.log(errors);
-            if (errors !== "undefined") {
-                console.log(errors.keys());
-                if (errors) {
-                    errors.forEach((error) => {
-                        alert(error.path);
-                    });
-                }
-            } else {
-                console.log("No error passed");
-            }
         </script>
     </body>
 </html>

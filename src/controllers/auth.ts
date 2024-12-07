@@ -149,8 +149,25 @@ class AuthController {
             return;
         }
 
+        // create hash token & update user with token and token expiry
+        const hashToken = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_SECRET as string,
+            {
+                expiresIn: "1h",
+            }
+        );
+
+        await User.findByIdAndUpdate(
+            { _id: user._id },
+            {
+                resetToken: hashToken,
+                resetTokenExpiry: new Date(Date.now() + 60 * 60 * 1000),
+            }
+        );
+
         // send email to user
-        const result = await sendResetPasswordEmail(user);
+        const result = await sendResetPasswordEmail(user, hashToken);
         if (result.success) {
             res.redirect(
                 "/auth/login?successMsg=Reset%20link%20sent%20to%20your%20email"
@@ -191,21 +208,35 @@ class AuthController {
             return;
         }
 
-        // update user password
+        // verify token from query
+        const hashToken = req.query.token as string;
+        const decoded = jwt.verify(hashToken, process.env.JWT_SECRET as string);
+        if (!decoded) {
+            res.status(400).render("./auth/reset-password", {
+                error: "Invalid token",
+            });
+        }
+
+        // hash & update user password
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password, salt);
 
-        const user = await User.findOneAndUpdate(
-            { email: req.body.email },
-            { password: hashPassword }
-        );
+        const user = await User.findOne({
+            resetToken: hashToken,
+            resetTokenExpiry: { $gt: new Date() },
+        });
 
         if (!user) {
             res.status(400).render("./auth/reset-password", {
-                error: "User not found",
+                error: "Invalid or expired token",
             });
             return;
         }
+
+        user.password = hashPassword;
+        user.resetToken = undefined;
+        user.resetTokenExpiry = undefined;
+        await user.save();
 
         res.redirect("/auth/login?successMsg=Password%20reset%20successful");
     }

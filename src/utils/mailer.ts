@@ -1,20 +1,7 @@
-import User from "@/models/users";
-import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 
-export const sendResetPasswordEmail = async (user: any) => {
+export const sendResetPasswordEmail = async (user: any, hashToken: string) => {
     try {
-        // create hash token & update user
-        const hashToken = await bcrypt.hash(user._id.toString(), 10);
-
-        await User.findByIdAndUpdate(
-            { _id: user._id },
-            {
-                resetToken: hashToken,
-                resetTokenExpiry: new Date(Date.now() + 60 * 60 * 1000),
-            }
-        );
-
         // create email transport
         const transporter = nodemailer.createTransport({
             service: "gmail",
