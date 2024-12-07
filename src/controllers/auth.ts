@@ -1,31 +1,19 @@
 import { Response, Request } from "express";
 import connect from "@/utils/dbConfig";
-import { matchedData, validationResult } from "express-validator";
+import { matchedData } from "express-validator";
 import bcrypt from "bcrypt";
 import User from "@/models/users";
 import jwt from "jsonwebtoken";
 import { sendResetPasswordEmail } from "@/utils/mailer";
+import { requestBodyErrorsInterrupt } from "@/utils/middleware/handleReqBodyErrors";
 
 connect();
 
 class AuthController {
     static async signup(req: Request, res: Response) {
-        const errors = validationResult(req);
-        console.log(errors);
-        if (!errors.isEmpty()) {
-            const extractedErrors: any[] = [];
-            errors.array().map((err: { path?: string; msg: string }) => {
-                if (err.path) {
-                    extractedErrors.push({ [err.path]: err.msg });
-                }
-            });
+        const result = requestBodyErrorsInterrupt(req, res);
+        if (result) return;
 
-            console.log(extractedErrors);
-            res.status(400).render("./auth/signup", {
-                errors: extractedErrors,
-            });
-            return;
-        }
         const data = matchedData(req);
         const { username, email, password, confirmPassword } = data;
         if (password !== confirmPassword) {
@@ -66,32 +54,19 @@ class AuthController {
     }
 
     static async signupPage(req: Request, res: Response) {
-        res.render("./auth/signup");
+        res.render("./auth/signup", { layout: false });
     }
 
     static async login(req: Request, res: Response) {
-        const errors = validationResult(req);
-        console.log(errors);
-        if (!errors.isEmpty()) {
-            const extractedErrors: any[] = [];
-            errors.array().map((err: { path?: string; msg: string }) => {
-                if (err.path) {
-                    extractedErrors.push({ [err.path]: err.msg });
-                }
-            });
-
-            console.log(extractedErrors);
-            res.status(400).render("./auth/login", {
-                errors: extractedErrors,
-            });
-            return;
-        }
+        const result = requestBodyErrorsInterrupt(req, res);
+        if (result) return;
 
         const { email, password } = matchedData(req);
         const user = await User.findOne({ email });
         if (!user) {
             res.status(400).render("./auth/login", {
                 error: "Bad credentials!",
+                layout: false,
             });
             return;
         }
@@ -101,6 +76,7 @@ class AuthController {
         if (!passwordMatch) {
             res.status(400).render("./auth/login", {
                 error: "Bad credentials!",
+                layout: false,
             });
             return;
         }
@@ -120,24 +96,13 @@ class AuthController {
     }
 
     static async loginPage(req: Request, res: Response) {
-        res.render("./auth/login");
+        res.render("./auth/login", { layout: false });
     }
 
     static async forgotPassword(req: Request, res: Response) {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            const extractedErrors: any[] = [];
-            errors.array().map((err: { path?: string; msg: string }) => {
-                if (err.path) {
-                    extractedErrors.push({ [err.path]: err.msg });
-                }
-            });
+        const result = requestBodyErrorsInterrupt(req, res);
+        if (result) return;
 
-            res.status(400).render("./auth/forgot-password", {
-                errors: extractedErrors,
-            });
-            return;
-        }
         const { email } = matchedData(req);
         const user = await User.findOne({
             email,
@@ -145,6 +110,7 @@ class AuthController {
         if (!user) {
             res.status(400).render("./auth/forgot-password", {
                 error: "User not found!",
+                layout: false,
             });
             return;
         }
@@ -167,8 +133,8 @@ class AuthController {
         );
 
         // send email to user
-        const result = await sendResetPasswordEmail(user, hashToken);
-        if (result.success) {
+        const _result = await sendResetPasswordEmail(user, hashToken);
+        if (_result.success) {
             res.redirect(
                 "/auth/login?successMsg=Reset%20link%20sent%20to%20your%20email"
             );
@@ -177,33 +143,23 @@ class AuthController {
 
         res.status(500).render("./auth/forgot-password", {
             error: "Error sending email, please try again",
+            layout: false,
         });
     }
 
     static async forgotPasswordPage(req: Request, res: Response) {
-        res.render("./auth/forgot-password");
+        res.render("./auth/forgot-password", { layout: false });
     }
 
     static async resetPassword(req: Request, res: Response) {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            const extractedErrors: any[] = [];
-            errors.array().map((err: { path?: string; msg: string }) => {
-                if (err.path) {
-                    extractedErrors.push({ [err.path]: err.msg });
-                }
-            });
-
-            res.status(400).render("./auth/reset-password", {
-                errors: extractedErrors,
-            });
-            return;
-        }
+        const result = requestBodyErrorsInterrupt(req, res);
+        if (result) return;
 
         const { password, confirmPassword } = matchedData(req);
         if (password !== confirmPassword) {
             res.status(400).render("./auth/reset-password", {
                 error: "Password does not match",
+                layout: false,
             });
             return;
         }
@@ -214,6 +170,7 @@ class AuthController {
         if (!decoded) {
             res.status(400).render("./auth/reset-password", {
                 error: "Invalid token",
+                layout: false,
             });
         }
 
@@ -229,6 +186,7 @@ class AuthController {
         if (!user) {
             res.status(400).render("./auth/reset-password", {
                 error: "Invalid or expired token",
+                layout: false,
             });
             return;
         }
@@ -242,7 +200,7 @@ class AuthController {
     }
 
     static async resetPasswordPage(req: Request, res: Response) {
-        res.render("./auth/reset-password");
+        res.render("./auth/reset-password", { layout: false });
     }
 }
 

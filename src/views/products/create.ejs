@@ -1,0 +1,188 @@
+<div class="bg-gray-100 flex items-center justify-center h-[90dvh]">
+    <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-2xl mx-4">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">
+            Create New Product
+        </h2>
+
+        <form
+            id="productUploadForm"
+            method="POST"
+            action="/products/create"
+            class="space-y-6"
+        >
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label
+                        for="productName"
+                        class="block text-gray-700 font-semibold mb-2"
+                        >Name</label
+                    >
+                    <input
+                        type="text"
+                        id="productName"
+                        name="name"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c05bc6] transition duration-300"
+                        placeholder="Enter product name"
+                    />
+                </div>
+
+                <div>
+                    <label
+                        for="productPrice"
+                        class="block text-gray-700 font-semibold mb-2"
+                        >Price ($)</label
+                    >
+                    <input
+                        type="number"
+                        id="productPrice"
+                        name="price"
+                        step="0.01"
+                        min="0"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c05bc6] transition duration-300"
+                        placeholder="Enter product price"
+                    />
+                </div>
+            </div>
+
+            <div>
+                <label
+                    for="productDescription"
+                    class="block text-gray-700 font-semibold mb-2"
+                    >Description</label
+                >
+                <textarea
+                    id="productDescription"
+                    name="description"
+                    rows="4"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c05bc6] transition duration-300 resize-none"
+                    placeholder="Describe your product..."
+                ></textarea>
+            </div>
+
+            <div>
+                <label
+                    for="productImage"
+                    class="block text-gray-700 font-semibold mb-2"
+                    >Image</label
+                >
+                <div class="flex items-center justify-center w-full">
+                    <label
+                        class="flex flex-col border-4 border-dashed border-gray-300 hover:bg-gray-100 hover:border-[#c05bc6] group relative w-full p-6 text-center cursor-pointer rounded-lg transition duration-300"
+                    >
+                        <div class="flex flex-col items-center justify-center">
+                            <svg
+                                class="w-12 h-12 text-gray-400 group-hover:text-[#c05bc6] transition"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                ></path>
+                            </svg>
+                            <p
+                                class="text-sm text-gray-500 group-hover:text-[#c05bc6] mt-2 transition"
+                            >
+                                Click to upload or drag and drop
+                            </p>
+                        </div>
+                        <input
+                            type="file"
+                            id="productImage"
+                            name="productImage"
+                            accept="image/*"
+                            class="hidden"
+                            required
+                        />
+                    </label>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label
+                        for="productCategory"
+                        class="block text-gray-700 font-semibold mb-2"
+                        >Category</label
+                    >
+                    <select
+                        id="productCategory"
+                        name="categoryId"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c05bc6] transition duration-300"
+                    >
+                        <option value="">Select a category</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="home-decor">Home & Decor</option>
+                        <option value="books">Books</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label
+                        for="productStock"
+                        class="block text-gray-700 font-semibold mb-2"
+                        >Stock Quantity</label
+                    >
+                    <input
+                        type="number"
+                        id="productStock"
+                        name="stock"
+                        min="0"
+                        required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#c05bc6] transition duration-300"
+                        placeholder="Enter stock quantity"
+                    />
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end">
+                <button
+                    type="submit"
+                    class="bg-[#c05bc6] text-white px-6 py-2 rounded-lg hover:bg-[#b949bf] focus:outline-none focus:ring-2 focus:ring-[#c05bc6] focus:ring-opacity-50 transition duration-300 transform hover:-translate-y-1 hover:shadow-lg"
+                >
+                    Upload Product
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document
+            .getElementById("productUploadForm")
+            .addEventListener("submit", function (e) {
+                e.preventDefault();
+                // Basic validation
+                const form = e.target;
+                if (form.checkValidity()) {
+                    alert("Product uploaded successfully!");
+                    // Here you would typically send the form data to a server
+                } else {
+                    form.reportValidity();
+                }
+            });
+
+        // Image upload preview and drag-drop
+        const imageUpload = document.getElementById("productImage");
+        const imageLabel = imageUpload.closest("label");
+
+        ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+            imageLabel.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        imageLabel.addEventListener("click", () => imageUpload.click());
+    </script>
+</div>

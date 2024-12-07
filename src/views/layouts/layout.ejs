@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../partials/head', {title: "MacShop"}) %>
+    <body class="bg-gray-100">
+        <nav
+            class="fixed top-0 left-0 h-screen w-64 bg-white shadow-xl flex flex-col"
+        >
+            <div
+                class="px-6 py-6 border-b border-gray-200 flex items-center justify-between"
+            >
+                <div class="flex items-center">
+                    <svg
+                        class="w-8 h-8 text-blue-600"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span class="ml-3 text-xl font-bold text-gray-800"
+                        >MacShop</span
+                    >
+                </div>
+            </div>
+
+            <div class="flex-grow px-4 py-6 space-y-2 overflow-y-auto">
+                <a
+                    href="#"
+                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
+                >
+                    <i
+                        class="ri-home-line mr-3 text-xl text-gray-500 group-hover:text-blue-600"
+                    ></i>
+                    <span class="font-medium group-hover:text-blue-600"
+                        >Dashboard</span
+                    >
+                </a>
+                <a
+                    href="#"
+                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
+                >
+                    <i
+                        class="ri-product-hunt-line mr-3 text-xl text-gray-500 group-hover:text-blue-600"
+                    ></i>
+                    <span class="font-medium group-hover:text-blue-600"
+                        >Products</span
+                    >
+                </a>
+                <a
+                    href="#"
+                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
+                >
+                    <i
+                        class="ri-upload-cloud-line mr-3 text-xl text-gray-500 group-hover:text-blue-600"
+                    ></i>
+                    <span class="font-medium group-hover:text-blue-600"
+                        >Upload Product</span
+                    >
+                </a>
+                <a
+                    href="#"
+                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
+                >
+                    <i
+                        class="ri-shopping-cart-line mr-3 text-xl text-gray-500 group-hover:text-blue-600"
+                    ></i>
+                    <span class="font-medium group-hover:text-blue-600"
+                        >Orders</span
+                    >
+                    <span
+                        class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full"
+                        >3</span
+                    >
+                </a>
+                <a
+                    href="#"
+                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
+                >
+                    <i
+                        class="ri-user-line mr-3 text-xl text-gray-500 group-hover:text-blue-600"
+                    ></i>
+                    <span class="font-medium group-hover:text-blue-600"
+                        >Customers</span
+                    >
+                </a>
+                <a
+                    href="#"
+                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
+                >
+                    <i
+                        class="ri-pie-chart-line mr-3 text-xl text-gray-500 group-hover:text-blue-600"
+                    ></i>
+                    <span class="font-medium group-hover:text-blue-600"
+                        >Analytics</span
+                    >
+                </a>
+            </div>
+
+            <div class="px-4 py-6 border-t border-gray-200 space-y-2">
+                <a
+                    href="#"
+                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
+                >
+                    <i
+                        class="ri-settings-3-line mr-3 text-xl text-gray-500 group-hover:text-blue-600"
+                    ></i>
+                    <span class="font-medium group-hover:text-blue-600"
+                        >Settings</span
+                    >
+                </a>
+                <a
+                    href="#"
+                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
+                >
+                    <i
+                        class="ri-logout-circle-r-line mr-3 text-xl text-red-500"
+                    ></i>
+                    <span class="font-medium text-red-500">Logout</span>
+                </a>
+            </div>
+        </nav>
+
+        <main class="ml-64 w-[calc(100%-16rem)] px-4 py-6"><%- body %></main>
+    </body>
+</html>

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { uploadImage } from "@/utils/middleware/multer";
+import { uploadAvatar } from "@/utils/middleware/multer";
 import AuthController from "@/controllers/auth";
 import { checkSchema } from "express-validator";
 import {
@@ -7,14 +7,14 @@ import {
     loginValidationSchema,
     forgotPasswordValidationSchema,
     resetPasswordValidationSchema,
-} from "@/utils/middleware/validator";
+} from "@/utils/middleware/validators/auth";
 
 const router = Router();
 
 router.post("/login", checkSchema(loginValidationSchema), AuthController.login);
 router.post(
     "/signup",
-    uploadImage.single("avatar"),
+    uploadAvatar.single("avatar"),
     checkSchema(signupValidationSchema),
     AuthController.signup
 );
