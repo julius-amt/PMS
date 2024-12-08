@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <%- include('../partials/head', {title: "MacShop"}) %>
+    <%- include('../partials/head', {title: "MacStore"}) %>
     <body class="bg-gray-100">
         <nav
             class="fixed top-0 left-0 h-screen w-64 bg-white shadow-xl flex flex-col"
@@ -10,7 +10,7 @@
             >
                 <div class="flex items-center">
                     <svg
-                        class="w-8 h-8 text-blue-600"
+                        class="w-8 h-8 text-[#b949bf]"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                     >
@@ -18,99 +18,132 @@
                         <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
                     </svg>
                     <span class="ml-3 text-xl font-bold text-gray-800"
-                        >MacShop</span
+                        >MacStore</span
                     >
                 </div>
             </div>
 
             <div class="flex-grow px-4 py-6 space-y-2 overflow-y-auto">
                 <a
-                    href="#"
-                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
+                    href="/products/"
+                    class="flex items-center px-4 py-3 text-gray-700 hover:bg-[#ecd6f7] rounded-lg transition-all duration-300 ease-in-out"
                 >
                     <i
-                        class="ri-home-line mr-3 text-xl text-gray-500 group-hover:text-blue-600"
+                        class="ri-product-hunt-line mr-3 text-xl text-gray-500"
                     ></i>
-                    <span class="font-medium group-hover:text-blue-600"
-                        >Dashboard</span
-                    >
+                    <div class="flex item-center gap-3">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="size-6"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
+                            />
+                        </svg>
+
+                        <span class="font-bold">Products</span>
+                    </div>
                 </a>
                 <a
-                    href="#"
-                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
+                    href="/products/categories/"
+                    class="flex items-center px-4 py-3 text-gray-700 hover:bg-[#ecd6f7] rounded-lg transition-all duration-300 ease-in-out"
                 >
                     <i
-                        class="ri-product-hunt-line mr-3 text-xl text-gray-500 group-hover:text-blue-600"
+                        class="ri-product-hunt-line mr-3 text-xl text-gray-500"
                     ></i>
-                    <span class="font-medium group-hover:text-blue-600"
-                        >Products</span
-                    >
+                    <div class="flex item-center gap-3">
+                        <svg
+                            class="size-6"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="size-6"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="m21 7.5-2.25-1.313M21 7.5v2.25m0-2.25-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3 2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75 2.25-1.313M12 21.75V19.5m0 2.25-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25"
+                            />
+                        </svg>
+
+                        <span class="font-bold">Categories</span>
+                    </div>
                 </a>
                 <a
-                    href="#"
-                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
+                    href="/products/create"
+                    class="flex items-center px-4 py-3 text-gray-700 hover:bg-[#ecd6f7] rounded-lg transition-all duration-300 ease-in-out"
                 >
                     <i
-                        class="ri-upload-cloud-line mr-3 text-xl text-gray-500 group-hover:text-blue-600"
+                        class="ri-product-hunt-line mr-3 text-xl text-gray-500"
                     ></i>
-                    <span class="font-medium group-hover:text-blue-600"
-                        >Upload Product</span
-                    >
+                    <div class="flex item-center gap-3">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="size-6"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M12 4.5v15m7.5-7.5h-15"
+                            />
+                        </svg>
+
+                        <span class="font-bold">Add Products</span>
+                    </div>
                 </a>
                 <a
-                    href="#"
-                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
+                    href="/products/categories/create"
+                    class="flex items-center px-4 py-3 text-gray-700 hover:bg-[#ecd6f7] rounded-lg transition-all duration-300 ease-in-out"
                 >
                     <i
-                        class="ri-shopping-cart-line mr-3 text-xl text-gray-500 group-hover:text-blue-600"
+                        class="ri-product-hunt-line mr-3 text-xl text-gray-500"
                     ></i>
-                    <span class="font-medium group-hover:text-blue-600"
-                        >Orders</span
-                    >
-                    <span
-                        class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full"
-                        >3</span
-                    >
-                </a>
-                <a
-                    href="#"
-                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
-                >
-                    <i
-                        class="ri-user-line mr-3 text-xl text-gray-500 group-hover:text-blue-600"
-                    ></i>
-                    <span class="font-medium group-hover:text-blue-600"
-                        >Customers</span
-                    >
-                </a>
-                <a
-                    href="#"
-                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
-                >
-                    <i
-                        class="ri-pie-chart-line mr-3 text-xl text-gray-500 group-hover:text-blue-600"
-                    ></i>
-                    <span class="font-medium group-hover:text-blue-600"
-                        >Analytics</span
-                    >
+                    <div class="flex item-center gap-3">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="size-6"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M12 4.5v15m7.5-7.5h-15"
+                            />
+                        </svg>
+
+                        <span class="font-bold">Add Categories</span>
+                    </div>
                 </a>
             </div>
 
             <div class="px-4 py-6 border-t border-gray-200 space-y-2">
                 <a
                     href="#"
-                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
+                    class="flex items-center px-4 py-3 text-gray-700 hover:bg-[#ecd6f7] rounded-lg transition-all duration-300 ease-in-out"
                 >
                     <i
-                        class="ri-settings-3-line mr-3 text-xl text-gray-500 group-hover:text-blue-600"
+                        class="ri-settings-3-line mr-3 text-xl text-gray-500"
                     ></i>
-                    <span class="font-medium group-hover:text-blue-600"
-                        >Settings</span
-                    >
+                    <span class="font-medium">Settings</span>
                 </a>
                 <a
                     href="#"
-                    class="group flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 rounded-lg transition-all duration-300 ease-in-out"
+                    class="flex items-center px-4 py-3 text-gray-700 hover:bg-[#ecd6f7] rounded-lg transition-all duration-300 ease-in-out"
                 >
                     <i
                         class="ri-logout-circle-r-line mr-3 text-xl text-red-500"
@@ -120,6 +153,6 @@
             </div>
         </nav>
 
-        <main class="ml-64 w-[calc(100%-16rem)] px-4 py-6"><%- body %></main>
+        <main class="ml-64 w-[calc(100%-16rem)]"><%- body %></main>
     </body>
 </html>

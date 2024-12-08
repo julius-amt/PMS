@@ -1,255 +1,246 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Signup</title>
-        <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-        <script src="https://cdn.tailwindcss.com"></script>
-    </head>
-    <body>
-        <section class="bg-white h-[70vdw]">
-            <div class="grid grid-cols-1 lg:grid-cols-2">
-                <div
-                    class="relative flex items-end px-4 pb-10 pt-60 h-dvh w-full flex flex-col items-center justify-center"
-                >
-                    <img
-                        class="object-cover w-[80%] h-full -mt-40"
-                        src="/6333213.jpg"
-                        alt="illustratoin"
-                    />
-                </div>
+<%- include('../partials/head', {title: "Signup on MacStore"}) %>
+<body>
+    <section class="bg-white h-[70vdw]">
+        <div class="grid grid-cols-1 lg:grid-cols-2">
+            <div
+                class="relative flex items-end px-4 pb-10 pt-60 h-dvh w-full flex flex-col items-center justify-center"
+            >
+                <img
+                    class="object-cover w-[80%] h-full -mt-40"
+                    src="/6333213.jpg"
+                    alt="illustratoin"
+                />
+            </div>
 
-                <div
-                    class="flex items-center justify-center px-4 py-10 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-24 scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-100"
-                >
-                    <div class="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
-                        <h2
-                            class="text-3xl font-bold leading-tight text-black sm:text-4xl"
+            <div
+                class="flex items-center justify-center px-4 py-10 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-24 scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-100"
+            >
+                <div class="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
+                    <h2
+                        class="text-3xl font-bold leading-tight text-black sm:text-4xl"
+                    >
+                        Welcome to MacStore
+                    </h2>
+                    <p class="mt-2 text-base text-gray-600">
+                        Already have an account?
+                        <a
+                            href="/auth/login"
+                            title=""
+                            class="font-medium text-[#c05bc6] transition-all duration-200 hover:text-[#c05bc6] focus:text-[#c05bc6] hover:underline"
                         >
-                            Welcome to MacShop
-                        </h2>
-                        <p class="mt-2 text-base text-gray-600">
-                            Already have an account?
-                            <a
-                                href="/auth/login"
-                                title=""
-                                class="font-medium text-[#c05bc6] transition-all duration-200 hover:text-[#c05bc6] focus:text-[#c05bc6] hover:underline"
+                            Login
+                        </a>
+                    </p>
+
+                    <form
+                        class="mt-8"
+                        id="signup-form"
+                        action="/auth/signup"
+                        method="POST"
+                        enctype="multipart/form-data"
+                    >
+                        <div class="space-y-5">
+                            <!-- select avatar -->
+                            <div
+                                class="mt-2.5 border-4 border-[#c05bc6] relative text-gray-400 focus-within:text-gray-600 rounded-full h-36 w-36 flex items-center justify-center mx-auto"
+                                id="avatar-container"
+                                style="
+                                    background-image: url('/bc666226-d3cf-43ef-91dd-47c2b21d3eec.jpg');
+                                    background-size: contain;
+                                    background-position: center;
+                                    background-repeat: no-repeat;
+                                "
                             >
-                                Login
-                            </a>
-                        </p>
+                                <input
+                                    type="file"
+                                    name="avatar"
+                                    placeholder="Avatar"
+                                    class="block w-full h-full opacity-0 absolute text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-full caret-[#c05bc6] focus:border-[#c05bc6] focus:bg-white focus:ring-1 focus:ring-[#c05bc6]"
+                                    onchange="handleFileSelect(event)"
+                                />
+                            </div>
 
-                        <form
-                            class="mt-8"
-                            id="signup-form"
-                            action="/auth/signup"
-                            method="POST"
-                            enctype="multipart/form-data"
-                        >
-                            <div class="space-y-5">
-                                <!-- select avatar -->
+                            <div>
                                 <div
-                                    class="mt-2.5 border-4 border-[#c05bc6] relative text-gray-400 focus-within:text-gray-600 rounded-full h-36 w-36 flex items-center justify-center mx-auto"
-                                    id="avatar-container"
-                                    style="
-                                        background-image: url('/bc666226-d3cf-43ef-91dd-47c2b21d3eec.jpg');
-                                        background-size: contain;
-                                        background-position: center;
-                                        background-repeat: no-repeat;
-                                    "
+                                    class="mt-2.5 relative text-gray-400 focus-within:text-gray-600"
                                 >
+                                    <div
+                                        class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth="{1.5}"
+                                            stroke="currentColor"
+                                            class="w-5 h-5"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z"
+                                            />
+                                        </svg>
+                                    </div>
+
                                     <input
-                                        type="file"
-                                        name="avatar"
-                                        placeholder="Avatar"
-                                        class="block w-full h-full opacity-0 absolute text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-full caret-[#c05bc6] focus:border-[#c05bc6] focus:bg-white focus:ring-1 focus:ring-[#c05bc6]"
-                                        onchange="handleFileSelect(event)"
+                                        type="text"
+                                        name="username"
+                                        id="username"
+                                        placeholder="Username"
+                                        class="block w-full py-4 pl-10 outline-none pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-lg bg-gray-50 caret-[#c05bc6] focus:border-[#c05bc6] focus:bg-white focus:ring-1 focus:ring-[#c05bc6]"
+                                        required
                                     />
                                 </div>
-
-                                <div>
+                            </div>
+                            <div>
+                                <div
+                                    class="mt-2.5 relative text-gray-400 focus-within:text-gray-600"
+                                >
                                     <div
-                                        class="mt-2.5 relative text-gray-400 focus-within:text-gray-600"
+                                        class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
                                     >
-                                        <div
-                                            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+                                        <svg
+                                            class="w-5 h-5"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
                                         >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth="{1.5}"
-                                                stroke="currentColor"
-                                                class="w-5 h-5"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z"
-                                                />
-                                            </svg>
-                                        </div>
-
-                                        <input
-                                            type="text"
-                                            name="username"
-                                            id="username"
-                                            placeholder="Username"
-                                            class="block w-full py-4 pl-10 outline-none pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-lg bg-gray-50 caret-[#c05bc6] focus:border-[#c05bc6] focus:bg-white focus:ring-1 focus:ring-[#c05bc6]"
-                                            required
-                                        />
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                                            />
+                                        </svg>
                                     </div>
-                                </div>
-                                <div>
-                                    <div
-                                        class="mt-2.5 relative text-gray-400 focus-within:text-gray-600"
-                                    >
-                                        <div
-                                            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
-                                        >
-                                            <svg
-                                                class="w-5 h-5"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
-                                                />
-                                            </svg>
-                                        </div>
 
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            id="email"
-                                            placeholder="Email Address"
-                                            class="block w-full py-4 pl-10 outline-none pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-lg bg-gray-50 caret-[#c05bc6] focus:border-[#c05bc6] focus:bg-white focus:ring-1 focus:ring-[#c05bc6]"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                <div>
-                                    <div
-                                        class="mt-2.5 relative text-gray-400 focus-within:text-gray-600"
-                                    >
-                                        <div
-                                            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth="{1.5}"
-                                                stroke="currentColor"
-                                                class="w-5 h-5"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M7.864 4.243A7.5 7.5 0 0 1 19.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 0 0 4.5 10.5a7.464 7.464 0 0 1-1.15 3.993m1.989 3.559A11.209 11.209 0 0 0 8.25 10.5a3.75 3.75 0 1 1 7.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 0 1-3.6 9.75m6.633-4.596a18.666 18.666 0 0 1-2.485 5.33"
-                                                />
-                                            </svg>
-                                        </div>
-
-                                        <input
-                                            name="password"
-                                            id="password"
-                                            placeholder="New Password"
-                                            class="block w-full py-4 pl-10 outline-none pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-lg bg-gray-50 caret-[#c05bc6] focus:border-[#c05bc6] focus:bg-white focus:ring-1 focus:ring-[#c05bc6]"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                <div>
-                                    <div
-                                        class="mt-2.5 relative text-gray-400 focus-within:text-gray-600"
-                                    >
-                                        <div
-                                            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                strokeWidth="{1.5}"
-                                                stroke="currentColor"
-                                                class="w-5 h-5"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M7.864 4.243A7.5 7.5 0 0 1 19.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 0 0 4.5 10.5a7.464 7.464 0 0 1-1.15 3.993m1.989 3.559A11.209 11.209 0 0 0 8.25 10.5a3.75 3.75 0 1 1 7.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 0 1-3.6 9.75m6.633-4.596a18.666 18.666 0 0 1-2.485 5.33"
-                                                />
-                                            </svg>
-                                        </div>
-
-                                        <input
-                                            name="confirmPassword"
-                                            id="confirmPassword"
-                                            placeholder="Confirm Password"
-                                            class="block w-full py-4 pl-10 outline-none pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-lg bg-gray-50 caret-[#c05bc6] focus:border-[#b949bf] focus:bg-white focus:ring-1 focus:ring-[#c05bc6]"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <button
-                                        type="submit"
-                                        class="`inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 bg-[#c05bc6] border border-transparent rounded-lg focus:bg-[#c05bc6] hover:bg-[#b949bf] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b949bf]"
-                                    >
-                                        Create account
-                                    </button>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        id="email"
+                                        placeholder="Email Address"
+                                        class="block w-full py-4 pl-10 outline-none pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-lg bg-gray-50 caret-[#c05bc6] focus:border-[#c05bc6] focus:bg-white focus:ring-1 focus:ring-[#c05bc6]"
+                                        required
+                                    />
                                 </div>
                             </div>
-                        </form>
-                    </div>
+                            <div>
+                                <div
+                                    class="mt-2.5 relative text-gray-400 focus-within:text-gray-600"
+                                >
+                                    <div
+                                        class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth="{1.5}"
+                                            stroke="currentColor"
+                                            class="w-5 h-5"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M7.864 4.243A7.5 7.5 0 0 1 19.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 0 0 4.5 10.5a7.464 7.464 0 0 1-1.15 3.993m1.989 3.559A11.209 11.209 0 0 0 8.25 10.5a3.75 3.75 0 1 1 7.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 0 1-3.6 9.75m6.633-4.596a18.666 18.666 0 0 1-2.485 5.33"
+                                            />
+                                        </svg>
+                                    </div>
+
+                                    <input
+                                        name="password"
+                                        id="password"
+                                        placeholder="New Password"
+                                        class="block w-full py-4 pl-10 outline-none pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-lg bg-gray-50 caret-[#c05bc6] focus:border-[#c05bc6] focus:bg-white focus:ring-1 focus:ring-[#c05bc6]"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <div
+                                    class="mt-2.5 relative text-gray-400 focus-within:text-gray-600"
+                                >
+                                    <div
+                                        class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            strokeWidth="{1.5}"
+                                            stroke="currentColor"
+                                            class="w-5 h-5"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M7.864 4.243A7.5 7.5 0 0 1 19.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 0 0 4.5 10.5a7.464 7.464 0 0 1-1.15 3.993m1.989 3.559A11.209 11.209 0 0 0 8.25 10.5a3.75 3.75 0 1 1 7.5 0c0 .527-.021 1.049-.064 1.565M12 10.5a14.94 14.94 0 0 1-3.6 9.75m6.633-4.596a18.666 18.666 0 0 1-2.485 5.33"
+                                            />
+                                        </svg>
+                                    </div>
+
+                                    <input
+                                        name="confirmPassword"
+                                        id="confirmPassword"
+                                        placeholder="Confirm Password"
+                                        class="block w-full py-4 pl-10 outline-none pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-lg bg-gray-50 caret-[#c05bc6] focus:border-[#b949bf] focus:bg-white focus:ring-1 focus:ring-[#c05bc6]"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <button
+                                    type="submit"
+                                    class="`inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 bg-[#c05bc6] border border-transparent rounded-lg focus:bg-[#c05bc6] hover:bg-[#b949bf] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#b949bf]"
+                                >
+                                    Create account
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <script>
-            function handleFileSelect(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        // Set the background image to the selected file
-                        document.getElementById(
-                            "avatar-container"
-                        ).style.backgroundImage = `url(${e.target.result})`;
-                    };
-                    reader.readAsDataURL(file);
-                }
+    <script>
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    // Set the background image to the selected file
+                    document.getElementById(
+                        "avatar-container"
+                    ).style.backgroundImage = `url(${e.target.result})`;
+                };
+                reader.readAsDataURL(file);
             }
+        }
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const errorMsg = urlParams.get("errorMsg");
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorMsg = urlParams.get("errorMsg");
 
-            if (errorMsg) {
-                Toastify({
-                    text: errorMsg,
-                    duration: 3000,
-                    position: "right",
-                    backgroundColor: "red",
-                    stopOnFocus: true,
-                    style: {
-                        color: "white",
-                        margin: "0 auto",
-                        padding: "3px",
-                        fontSize: "1rem",
-                        fontWeight: "500",
-                        width: "100%",
-                        textAlign: "center",
-                    },
-                }).showToast();
-            }
-        </script>
-    </body>
-</html>
+        if (errorMsg) {
+            Toastify({
+                text: errorMsg,
+                duration: 3000,
+                position: "right",
+                backgroundColor: "red",
+                stopOnFocus: true,
+                style: {
+                    color: "white",
+                    margin: "0 auto",
+                    padding: "3px",
+                    fontSize: "1rem",
+                    fontWeight: "500",
+                    width: "100%",
+                    textAlign: "center",
+                },
+            }).showToast();
+        }
+    </script>
+</body>

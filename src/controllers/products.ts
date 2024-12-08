@@ -5,9 +5,14 @@ import Product from "@/models/products";
 import Category from "@/models/categories";
 
 class ProductController {
+    static async products() {
+        return await Product.find();
+    }
+
     static async listAll(req: Request, res: Response) {
-        const products = await Product.find();
-        res.render("./products/products", { products });
+        res.render("./products/products", {
+            products: await ProductController.products(),
+        });
     }
 
     static async createProduct(req: Request, res: Response) {
@@ -28,12 +33,12 @@ class ProductController {
         const newProduct = new Product({
             name,
             description,
-            categoryId,
+            categoryId: [categoryId],
             price,
             stock,
         });
-        await newProduct;
-        res.status(201).render("products");
+        await newProduct.save();
+        res.status(201).redirect("/products/prducts");
     }
 
     static async createProductPage(req: Request, res: Response) {

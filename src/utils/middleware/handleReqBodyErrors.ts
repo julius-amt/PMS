@@ -3,6 +3,7 @@ import { validationResult } from "express-validator";
 
 export const requestBodyErrorsInterrupt = (req: Request, res: Response) => {
     const errors = validationResult(req);
+    console.log(errors);
     if (!errors.isEmpty()) {
         const extractedErrors: any[] = [];
         errors.array().map((err: { path?: string; msg: string }) => {

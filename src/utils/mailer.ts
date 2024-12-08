@@ -17,7 +17,7 @@ export const sendResetPasswordEmail = async (user: any, hashToken: string) => {
         // send email
         await transporter.sendMail({
             from: {
-                name: "MacShop Team",
+                name: "MacStore Team",
                 address: process.env.EMAIL_USER!,
             },
             to: user.email,

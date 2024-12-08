@@ -1,8 +1,8 @@
 import { Router } from "express";
-import ProductController from "../controllers/products";
 import { productCreateValidationSchema } from "@/utils/middleware/validators/product";
 import { checkSchema } from "express-validator";
 import { uploadProductImage } from "@/utils/middleware/multer";
+import ProductController from "../controllers/products";
 
 const router = Router();
 

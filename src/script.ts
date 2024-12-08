@@ -2,6 +2,7 @@ import express, { json, urlencoded } from "express";
 import morgan from "morgan";
 import { authRouter } from "@/routes/auth";
 import { productRouter } from "@/routes/products";
+import { categoryRouter } from "@/routes/categories";
 import path from "path";
 import expressLayouts from "express-ejs-layouts";
 import "dotenv/config";
@@ -26,6 +27,7 @@ app.set("views", path.resolve(__dirname, "views"));
 app.use("/auth", authRouter);
 
 app.use("/products", productRouter);
+app.use("/products", categoryRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
