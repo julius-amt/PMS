@@ -12,9 +12,16 @@ router.post(
     checkSchema(productCreateValidationSchema),
     ProductController.createProduct
 );
+router.put(
+    "/:productId",
+    uploadProductImage.single("productImage"),
+    checkSchema(productCreateValidationSchema),
+    ProductController.deleteProduct
+);
+router.delete("/:productId", ProductController.deleteProduct);
 
 router.get("/", ProductController.listAll);
-router.get("/create", ProductController.createProductPage);
+router.get("/create", ProductController.createProductPage); // the arrangement of these 2 routes is intentional here
 router.get("/:productId", ProductController.productDetailsPage);
 
 export { router as productRouter };

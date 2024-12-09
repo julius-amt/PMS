@@ -4,9 +4,9 @@ const ProductSchema = new Schema(
     {
         name: { type: String, required: true },
         description: { type: String, required: true },
-        categories: [{ type: Types.ObjectId, ref: "Category" }],
+        category: { type: Schema.Types.ObjectId, ref: "Category" }, // Reference to Category
         price: {
-            type: Types.Decimal128,
+            type: Schema.Types.Decimal128,
             required: true,
             default: 0,
             min: 0,

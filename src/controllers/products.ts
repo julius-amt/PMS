@@ -56,7 +56,7 @@ class ProductController {
             const newProduct = new Product({
                 name,
                 description,
-                categories: [new Types.ObjectId(categoryId)],
+                category: new Types.ObjectId(categoryId),
                 price,
                 stock,
                 image: imageFilename,
@@ -76,7 +76,6 @@ class ProductController {
 
     static async productDetailsPage(req: Request, res: Response) {
         const { productId } = req.params;
-        console.log(`Product ID: ${productId}`);
 
         // Validate productId
         if (!Types.ObjectId.isValid(productId)) {
@@ -86,23 +85,124 @@ class ProductController {
 
         try {
             const product = await Product.findById(productId).populate(
-                "categories"
+                "category"
             );
+            const category = await Category.findById(product.category);
+            console.log(category); // Should not be null
+
+            console.log(product);
 
             if (!product) {
                 res.status(404).json({ message: "Product not found!" });
                 return;
             }
 
-            console.log("Product Details:", product);
+            // select all other products with their categories
+            const otherProducts = await Product.find({
+                _id: { $ne: productId },
+                category: product.category,
+            }).populate("category");
 
             res.render("./products/detail", {
                 product,
-                categories: product.categories,
+                category: product.category,
+                otherProducts,
             });
         } catch (error) {
-            console.error("Error fetching product details:", error);
             res.status(500).json({ message: "Internal Server Error" });
+        }
+    }
+
+    static async deleteProduct(req: Request, res: Response) {
+        const { productId } = req.params;
+
+        // Validate productId
+        if (!Types.ObjectId.isValid(productId)) {
+            res.status(400).json({
+                message: "Invalid Product ID",
+                success: false,
+            });
+            return;
+        }
+
+        try {
+            await Product.findByIdAndDelete(productId);
+            res.status(200).json({
+                message: "Product deleted successfully",
+                success: true,
+            });
+        } catch (error) {
+            res.status(500).json({
+                message: "Internal Server Error",
+                success: false,
+            });
+        }
+    }
+
+    static async updateProduct(req: Request, res: Response) {
+        const { productId } = req.params;
+
+        // Validate productId
+        if (!Types.ObjectId.isValid(productId)) {
+            res.status(400).json({
+                message: "Invalid Product ID",
+                success: false,
+            });
+            return;
+        }
+
+        const { name, description, categoryId, price, stock } =
+            matchedData(req);
+
+        if (!Types.ObjectId.isValid(categoryId)) {
+            res.status(400).json({
+                message: "Invalid category ID",
+                success: false,
+            });
+            return;
+        }
+
+        // Check if category exists
+        const categoryExist = await Category.findById(categoryId);
+        if (!categoryExist) {
+            res.status(400).json({
+                message: "Category not found",
+                success: false,
+            });
+            return;
+        }
+
+        try {
+            const product = await Product.findByIdAndUpdate(
+                productId,
+                {
+                    name,
+                    description,
+                    category: new Types.ObjectId(categoryId),
+                    price,
+                    stock,
+                },
+                { new: true }
+            );
+
+            if (!product) {
+                res.status(404).json({
+                    message: "Product not found",
+                    success: false,
+                });
+                return;
+            }
+
+            res.status(200).json({
+                message: "Product updated successfully",
+                success: true,
+                product,
+            });
+        } catch (error) {
+            res.status(500).json({
+                message: "Internal Server Error",
+                success: false,
+            });
         }
     }
 }

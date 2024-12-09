@@ -99,6 +99,9 @@ class AuthController {
         res.render("./auth/login", { layout: false });
     }
 
+    // logout endpoint
+    static async logout(req: Request, res: Response) {}
+
     static async forgotPassword(req: Request, res: Response) {
         const result = requestBodyErrorsInterrupt(req, res);
         if (result) return;

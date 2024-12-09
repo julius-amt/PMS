@@ -154,6 +154,32 @@
         </nav>
 
         <main class="ml-64 w-[calc(100%-16rem)]"><%- body %></main>
+        <script>
+            // logout functionality
+            async function logoutUser() {
+                confirm("Are you sure you want to log out?");
+                if (!confirm) return;
+                try {
+                    const response = await fetch("/auth/logout", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        window.location.href = "/auth/login"; // replace with your login URL
+                        alert(data.message);
+                    } else {
+                        alert("Logout failed. Please try again.");
+                    }
+                } catch (error) {
+                    console.error("Error logging out:", error);
+                    alert("Error logging out. Please try again.");
+                }
+            }
+        </script>
     </body>
-    <script src="/js/index.js"></script>
 </html>
