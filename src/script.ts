@@ -26,8 +26,8 @@ app.set("views", path.resolve(__dirname, "views"));
 // auth routes
 app.use("/auth", authRouter);
 
-app.use("/products", productRouter);
 app.use("/products", categoryRouter);
+app.use("/products", productRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

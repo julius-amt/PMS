@@ -2,72 +2,69 @@
     <!-- Hero Section -->
     <div class="bg-[#c05bc6] text-white py-4 text-center">
         <h1 class="text-4xl font-bold">
-            Welcome to MacStore's Product Managment Console
+            Welcome to MacStore's Product Management Console
         </h1>
         <p class="mt-4">Organize, Manage, and Grow Your Products</p>
     </div>
 
-    <!-- list produst here -->
-    <div
-        id="product-grid"
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
-    >
+    <!-- List products here -->
+    <div class="grid grid-cols-3 md:grid-cols-5 gap-4 p-2">
         <% products.forEach(function(product) { %>
         <div
-            class="product-card bg-white rounded-xl shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-2xl group"
-            data-category="<%= product.category %>"
-            data-name="<%= product.name.toLowerCase() %>"
+            class="bg-white border h-96 rounded-lg p-4 shadow-sm relative transform transition-all duration-300 hover:scale-105 hover:shadow-lg"
         >
-            <div class="relative overflow-hidden rounded-t-xl">
-                <img
-                    src="<%= product.image %>"
-                    alt="<%= product.name %>"
-                    class="w-full h-64 object-cover transition duration-300 group-hover:scale-110"
-                />
-                <div class="absolute top-4 right-4">
-                    <button
-                        class="bg-white/80 text-gray-800 p-2 rounded-full hover:bg-blue-500 hover:text-white transition"
-                    >
-                        <i class="ri-heart-line"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="p-6">
-                <h2 class="text-2xl font-bold text-gray-800 mb-3 truncate">
-                    <%= product.name %>
-                </h2>
-
-                <p class="text-gray-600 mb-4 line-clamp-3">
-                    <%= product.description %>
-                </p>
-
-                <div class="flex items-center justify-between">
-                    <span class="text-3xl font-bold text-blue-600">
-                        $<%= product.price.toFixed(2) %>
-                    </span>
-
-                    <div class="flex space-x-2">
-                        <button
-                            class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition"
-                        >
-                            <i class="ri-shopping-cart-line mr-2"></i>Add
-                        </button>
-                        <button
-                            class="bg-gray-200 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-300 transition"
-                        >
-                            <i class="ri-eye-line"></i>
-                        </button>
+            <img
+                src="/products/<%= product.image %>"
+                alt="<%= product.name %>"
+                class="w-full h-[70%] object-cover rounded mb-4"
+                onerror="this.src='/images/placeholder.png'"
+            />
+            <h3
+                title="<%= product.name %>"
+                class="text-medium font-semibold mb-2"
+            >
+                <%= product.name.length < 62 ? product.name :
+                product.name.slice(0, 62) + '...' %>
+            </h3>
+            <div
+                class="absolute bottom-2 flex justify-between w-full left-0 px-4"
+            >
+                <div class="flex justify-between items-center w-full">
+                    <div class="flex gap-2 items-center justify-center">
+                        <span class="text-[#c05bc6] font-bold">
+                            $<%= Number(product.price).toFixed(2) %>
+                        </span>
+                        <span class="text-gray-500 text-sm">
+                            Stock: <%= product.stock %>
+                        </span>
                     </div>
+                    <a
+                        href="/products/<%= product._id %>"
+                        title="Click  to view more..."
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="size-6 hover:text-[#c05bc6]"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
+                            />
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                            />
+                        </svg>
+                    </a>
                 </div>
             </div>
         </div>
         <% }); %>
-    </div>
-
-    <div id="no-results" class="hidden text-center py-12">
-        <i class="ri-search-line text-6xl text-gray-300 mb-4"></i>
-        <h2 class="text-2xl font-semibold text-gray-600">No Products Found</h2>
-        <p class="text-gray-500 mt-2">Try adjusting your search or filter</p>
     </div>
 </div>

@@ -5,18 +5,21 @@
         </h2>
 
         <form
+            enctype="multipart/form-data"
             id="productUploadForm"
             method="POST"
             action="/products/create"
             class="space-y-6"
         >
+            <!-- Product Name and Price -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label
                         for="productName"
                         class="block text-gray-700 font-semibold mb-2"
-                        >Name</label
                     >
+                        Name
+                    </label>
                     <input
                         type="text"
                         id="productName"
@@ -26,13 +29,13 @@
                         placeholder="Enter product name"
                     />
                 </div>
-
                 <div>
                     <label
                         for="productPrice"
                         class="block text-gray-700 font-semibold mb-2"
-                        >Price ($)</label
                     >
+                        Price (¢)
+                    </label>
                     <input
                         type="number"
                         id="productPrice"
@@ -46,12 +49,14 @@
                 </div>
             </div>
 
+            <!-- Product Description -->
             <div>
                 <label
                     for="productDescription"
                     class="block text-gray-700 font-semibold mb-2"
-                    >Description</label
                 >
+                    Description
+                </label>
                 <textarea
                     id="productDescription"
                     name="description"
@@ -62,14 +67,18 @@
                 ></textarea>
             </div>
 
+            <!-- Product Image -->
             <div>
                 <label
                     for="productImage"
                     class="block text-gray-700 font-semibold mb-2"
-                    >Image</label
                 >
+                    Image
+                </label>
                 <div class="flex items-center justify-center w-full">
                     <label
+                        id="previewContainer"
+                        for="productImage"
                         class="flex flex-col border-4 border-dashed border-gray-300 hover:bg-gray-100 hover:border-[#c05bc6] group relative w-full p-6 text-center cursor-pointer rounded-lg transition duration-300"
                     >
                         <div class="flex flex-col items-center justify-center">
@@ -90,28 +99,30 @@
                             <p
                                 class="text-sm text-gray-500 group-hover:text-[#c05bc6] mt-2 transition"
                             >
-                                Click to upload or drag and drop
+                                Click to upload
                             </p>
                         </div>
-                        <input
-                            type="file"
-                            id="productImage"
-                            name="productImage"
-                            accept="image/*"
-                            class="hidden"
-                            required
-                        />
                     </label>
+                    <input
+                        type="file"
+                        id="productImage"
+                        name="productImage"
+                        accept="image/*"
+                        class="hidden"
+                        required
+                    />
                 </div>
             </div>
 
+            <!-- Product Category and Stock -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label
                         for="productCategory"
                         class="block text-gray-700 font-semibold mb-2"
-                        >Category</label
                     >
+                        Category
+                    </label>
                     <select
                         id="productCategory"
                         name="categoryId"
@@ -125,8 +136,9 @@
                     <label
                         for="productStock"
                         class="block text-gray-700 font-semibold mb-2"
-                        >Stock Quantity</label
                     >
+                        Stock Quantity
+                    </label>
                     <input
                         type="number"
                         id="productStock"
@@ -139,6 +151,7 @@
                 </div>
             </div>
 
+            <!-- Submit Button -->
             <div class="flex items-center justify-end">
                 <button
                     type="submit"
@@ -150,36 +163,36 @@
         </form>
     </div>
 
+    <!-- JavaScript -->
     <script>
-        document
-            .getElementById("productUploadForm")
-            .addEventListener("submit", function (e) {
-                e.preventDefault();
-                // Basic validation
-                const form = e.target;
-                if (form.checkValidity()) {
-                    alert("Product uploaded successfully!");
-                    // Here you would typically send the form data to a server
-                } else {
-                    form.reportValidity();
-                }
-            });
-
-        // Image upload preview and drag-drop
         const imageUpload = document.getElementById("productImage");
-        const imageLabel = imageUpload.closest("label");
+        const previewContainer = document.getElementById("previewContainer");
 
-        ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
-            imageLabel.addEventListener(eventName, preventDefaults, false);
+        // Custom click handling for file upload
+        imageUpload.addEventListener("change", () => {
+            const file = imageUpload.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const preview = document.createElement("img");
+                    preview.src = e.target.result;
+                    preview.alt = "Product Image Preview";
+                    preview.classList.add(
+                        "h-full",
+                        "w-full",
+                        "object-cover",
+                        "rounded-lg"
+                    );
+
+                    // Clear any previous preview
+                    previewContainer.innerHTML = "";
+                    previewContainer.appendChild(preview);
+                };
+                reader.readAsDataURL(file);
+            }
         });
 
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        imageLabel.addEventListener("click", () => imageUpload.click());
-
+        // get category list to be displayed under category options
         const refinedCategories = [];
 
         const getRefinedCategoryList = async () => {
@@ -188,15 +201,18 @@
                     method: "GET",
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    refinedCategories.push(...data.categories);
-                    populateCategoryDropdown(); // Call function to populate the dropdown
-                } else {
-                    alert("Error fetching category list, reload the page!");
-                }
-            } catch {
-                alert("Error fetching category list, reload the page!");
+                if (!response.ok)
+                    throw new Error("Failed to fetch categories.");
+
+                const data = await response.json();
+                if (!data.categories)
+                    throw new Error("Unexpected API response format.");
+
+                refinedCategories.push(...data.categories);
+                populateCategoryDropdown();
+            } catch (error) {
+                console.error(error.message);
+                alert("Error fetching category list. Please try again later!");
             }
         };
 

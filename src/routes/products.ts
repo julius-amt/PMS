@@ -15,5 +15,6 @@ router.post(
 
 router.get("/", ProductController.listAll);
 router.get("/create", ProductController.createProductPage);
+router.get("/:productId", ProductController.productDetailsPage);
 
 export { router as productRouter };
