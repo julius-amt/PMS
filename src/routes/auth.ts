@@ -8,9 +8,11 @@ import {
     forgotPasswordValidationSchema,
     resetPasswordValidationSchema,
 } from "@/utils/middleware/validators/auth";
+import { handleUnprotectedRoutesFromAuthUsers } from "@/utils/middleware/handleUnprotectedtRoutes";
 
 const router = Router();
 
+router.use(handleUnprotectedRoutesFromAuthUsers);
 router.post("/login", checkSchema(loginValidationSchema), AuthController.login);
 router.post(
     "/signup",
@@ -31,6 +33,7 @@ router.post(
 
 router.get("/login", AuthController.loginPage);
 router.get("/signup", AuthController.signupPage);
+router.get("/logout", AuthController.logout);
 router.get("/forgot-password", AuthController.forgotPasswordPage);
 router.get("/reset-password", AuthController.resetPasswordPage);
 

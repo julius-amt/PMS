@@ -1,6 +1,22 @@
-import { models, model, Schema, Types } from "mongoose";
+import { models, model, Schema, Model, Document } from "mongoose";
 
-const ProductSchema = new Schema(
+// Define an interface for the Product document
+interface IProduct extends Document {
+    name: string;
+    description: string;
+    category: Schema.Types.ObjectId;
+    price: Schema.Types.Decimal128;
+    stock: number;
+    image?: string;
+}
+
+// Define a custom static method interface
+interface ProductModel extends Model<IProduct> {
+    filterProductsByCategory(categoryName: string): Promise<IProduct[]>;
+}
+
+// Define the schema
+const ProductSchema = new Schema<IProduct>(
     {
         name: { type: String, required: true },
         description: { type: String, required: true },
@@ -17,5 +33,17 @@ const ProductSchema = new Schema(
     { timestamps: true }
 );
 
-const Product = models.Product || model("Product", ProductSchema);
+// Add the static method
+ProductSchema.statics.filterProductsByCategory = async function (
+    categoryName: string
+) {
+    return await this.find()
+        .populate("category")
+        .where("category.name")
+        .equals(categoryName);
+};
+
+const Product = (models.Product ||
+    model<IProduct, ProductModel>("Product", ProductSchema)) as ProductModel;
+
 export default Product;

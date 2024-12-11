@@ -5,6 +5,8 @@ import { productRouter } from "@/routes/products";
 import { categoryRouter } from "@/routes/categories";
 import path from "path";
 import expressLayouts from "express-ejs-layouts";
+import { authenticatedUser } from "./utils/middleware/verifyToken";
+import cookieParser from "cookie-parser";
 import "dotenv/config";
 
 const app = express();
@@ -15,6 +17,7 @@ app.use(urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(expressLayouts);
 app.set("layout", "layouts/layout");
+app.use(cookieParser());
 
 // static files
 app.use(express.static(path.resolve(__dirname, "..", "public")));
@@ -26,6 +29,8 @@ app.set("views", path.resolve(__dirname, "views"));
 // auth routes
 app.use("/auth", authRouter);
 
+// authenticated middleware
+app.use(authenticatedUser);
 app.use("/products", categoryRouter);
 app.use("/products", productRouter);
 

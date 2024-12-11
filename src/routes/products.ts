@@ -16,7 +16,7 @@ router.put(
     "/:productId",
     uploadProductImage.single("productImage"),
     checkSchema(productCreateValidationSchema),
-    ProductController.deleteProduct
+    ProductController.updateProduct
 );
 router.delete("/:productId", ProductController.deleteProduct);
 

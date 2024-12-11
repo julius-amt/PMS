@@ -7,6 +7,50 @@
         <p class="mt-4">Organize, Manage, and Grow Your Products</p>
     </div>
 
+    <!-- search and filter -->
+    <div class="mb-6 grid grid-cols-6 items-center m-5">
+        <div class="w-full max-w-md flex items-center relative col-span-4">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search products by name or description"
+                class="w-full px-4 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#29C782]"
+            />
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="search-icon absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 cursor-pointer h-5 w-5"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                />
+            </svg>
+        </div>
+
+        <div class="ml-4">
+            <select
+                id="productCategory"
+                class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#29C782]"
+            >
+                <option value="">Filter by category</option>
+            </select>
+        </div>
+        <div class="ml-4">
+            <select
+                id="sortSelect"
+                class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#29C782]"
+            >
+                <option value="title-asc">Name (A-Z)</option>
+                <option value="title-desc">Name (Z-A)</option>
+            </select>
+        </div>
+    </div>
+
     <!-- List products here -->
     <div class="grid grid-cols-3 md:grid-cols-5 gap-4 p-2">
         <% products.forEach(function(product) { %>
@@ -32,7 +76,7 @@
                 <div class="flex justify-between items-center w-full">
                     <div class="flex gap-2 items-center justify-center">
                         <span class="text-[#c05bc6] font-bold">
-                            $<%= Number(product.price).toFixed(2) %>
+                            ¢<%= Number(product.price).toFixed(2) %>
                         </span>
                         <span class="text-gray-500 text-sm">
                             Stock: <%= product.stock %>
@@ -68,3 +112,76 @@
         <% }); %>
     </div>
 </div>
+
+<script>
+    // get category list to be displayed under category options
+    const refinedCategories = [];
+
+    const getRefinedCategoryList = async () => {
+        try {
+            const response = await fetch("/products/categories/refined", {
+                method: "GET",
+            });
+
+            if (!response.ok) throw new Error("Failed to fetch categories.");
+
+            const data = await response.json();
+            if (!data.categories)
+                throw new Error("Unexpected API response format.");
+
+            refinedCategories.push(...data.categories);
+            populateCategoryDropdown();
+        } catch (error) {
+            console.error(error.message);
+            alert("Error fetching category list. Please try again later!");
+        }
+    };
+
+    const populateCategoryDropdown = () => {
+        const categorySelect = document.getElementById("productCategory");
+        categorySelect.innerHTML = ""; // Clear existing options
+
+        // Create a default "Select a category" option
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "Filter by category";
+        categorySelect.appendChild(defaultOption);
+
+        // Add options from the refinedCategories array
+        refinedCategories.forEach((category) => {
+            const option = document.createElement("option");
+            option.value = category.id;
+            option.textContent = category.name;
+            categorySelect.appendChild(option);
+        });
+    };
+
+    // Initialize fetching categories when the script loads
+    getRefinedCategoryList();
+
+    document
+        .getElementById("productCategory")
+        .addEventListener("change", async (event) => {
+            const categoryName = event.target.value;
+
+            if (categoryName) {
+                try {
+                    const response = await fetch(
+                        `/products?category=${categoryName}`,
+                        {
+                            method: "GET",
+                        }
+                    );
+
+                    if (!response.ok)
+                        throw new Error("Failed to fetch filtered products.");
+
+                    // Reload the page with the filtered products (or update DOM dynamically)
+                    window.location.href = `/products?category=${categoryName}`;
+                } catch (error) {
+                    console.error(error.message);
+                    alert("Error filtering products. Please try again!");
+                }
+            }
+        });
+</script>

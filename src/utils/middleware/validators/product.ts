@@ -27,7 +27,7 @@ export const productCreateValidationSchema = {
         notEmpty: {
             errorMessage: "Price is required",
         },
-        isInt: {
+        isFloat: {
             errorMessage: "Price should be a number",
             options: {
                 min: 0,

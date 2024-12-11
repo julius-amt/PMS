@@ -11,6 +11,7 @@
     "description": "",
     "devDependencies": {
         "@types/bcrypt": "^5.0.2",
+        "@types/cookie-parser": "^1.4.8",
         "@types/express": "^5.0.0",
         "@types/express-ejs-layouts": "^2.5.4",
         "@types/jsonwebtoken": "^9.0.7",
@@ -24,6 +25,7 @@
     },
     "dependencies": {
         "bcrypt": "^5.1.1",
+        "cookie-parser": "^1.4.7",
         "dotenv": "^16.4.7",
         "ejs": "^3.1.10",
         "express": "^4.21.1",

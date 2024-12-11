@@ -4,6 +4,8 @@ import { matchedData } from "express-validator";
 import Product from "@/models/products";
 import Category from "@/models/categories";
 import { Types } from "mongoose";
+import fs from "fs";
+import path from "path";
 
 class ProductController {
     static async products() {
@@ -11,6 +13,39 @@ class ProductController {
     }
 
     static async listAll(req: Request, res: Response) {
+        const { categoryId } = req.query;
+
+        if (categoryId) {
+            if (!Types.ObjectId.isValid(categoryId as string)) {
+                res.status(400).render("./products/products");
+                return;
+            }
+
+            try {
+                // Validate and find the category
+                const _category = await Category.findById(categoryId);
+                if (!_category) {
+                    res.status(404).json({ message: "Category not found!" });
+                    return;
+                }
+
+                const filteredProducts = await Product.filterProductsByCategory(
+                    _category.name
+                );
+
+                res.render("./products/products", {
+                    products: filteredProducts,
+                });
+                return;
+            } catch (err: any) {
+                console.error(
+                    "Error filtering products by category:",
+                    err.message
+                );
+                res.status(500).json({ message: "Internal Server Error" });
+                return;
+            }
+        }
         res.render("./products/products", {
             products: await ProductController.products(),
         });
@@ -23,6 +58,8 @@ class ProductController {
 
         const { name, description, categoryId, price, stock } =
             matchedData(req);
+        console.log(name, description, categoryId, price, stock);
+        console.log(req.body);
 
         if (!Types.ObjectId.isValid(categoryId)) {
             res.status(400).render("products/create", {
@@ -87,10 +124,6 @@ class ProductController {
             const product = await Product.findById(productId).populate(
                 "category"
             );
-            const category = await Category.findById(product.category);
-            console.log(category); // Should not be null
-
-            console.log(product);
 
             if (!product) {
                 res.status(404).json({ message: "Product not found!" });
@@ -125,8 +158,24 @@ class ProductController {
             return;
         }
 
+        const productInfo = await Product.findById(productId);
+
         try {
             await Product.findByIdAndDelete(productId);
+
+            // remove old omage from server
+            const pathToOldImage = path.resolve(
+                __dirname,
+                "..",
+                "..",
+                "public",
+                "products",
+                productInfo?.image as string
+            );
+
+            console.log(pathToOldImage);
+            fs.unlinkSync(pathToOldImage);
+
             res.status(200).json({
                 message: "Product deleted successfully",
                 success: true,
@@ -140,6 +189,10 @@ class ProductController {
     }
 
     static async updateProduct(req: Request, res: Response) {
+        // Handle validation errors using the custom middleware
+        const result = requestBodyErrorsInterrupt(req, res);
+        if (result) return;
+
         const { productId } = req.params;
 
         // Validate productId
@@ -172,6 +225,12 @@ class ProductController {
             return;
         }
 
+        // set image file
+        const image = req.file;
+
+        //get old image file path to be removed from server
+        const oldProductInfo = await Product.findById(productId);
+
         try {
             const product = await Product.findByIdAndUpdate(
                 productId,
@@ -181,9 +240,23 @@ class ProductController {
                     category: new Types.ObjectId(categoryId),
                     price,
                     stock,
+                    image: image?.filename,
                 },
                 { new: true }
             );
+
+            // remove old omage from server
+            const pathToOldImage = path.resolve(
+                __dirname,
+                "..",
+                "..",
+                "public",
+                "products",
+                oldProductInfo?.image as string
+            );
+
+            console.log(pathToOldImage);
+            fs.unlinkSync(pathToOldImage);
 
             if (!product) {
                 res.status(404).json({

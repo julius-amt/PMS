@@ -29,10 +29,6 @@
                         <%= product.category.name %>
                     </li>
                     <li>
-                        <strong>Stock: </strong><%= product.stock %> items
-                        available
-                    </li>
-                    <li>
                         <strong>Added on: </strong><%= new
                         Date(product.createdAt).toLocaleDateString() %>
                     </li>
@@ -74,10 +70,11 @@
                         />
                     </svg>
                 </a>
+
                 <a
                     class="cursor-pointer"
+                    onclick="openEditModal('<%= product._id %>', '<%= escape(product.name) %>', '<%= escape(product.description) %>', '<%= escape(product.price) %>', '<%= product.stock %>', '<%= product.image %>', '<%= escape(product.category.name) %>', '<%= escape(product.category._id) %>')"
                     title="Edit Product"
-                    onclick="openEditModal('<%= product._id %>', '<%= escape(product.name) %>', '<%= escape(product.description) %>', '<%= escape(product.price) %>', '<%= product.stock %>', '<%= product.image %>', '<%= product.category %>')"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -188,9 +185,8 @@
         </h2>
         <form
             enctype="multipart/form-data"
-            id="productUploadForm"
+            id="editProductForm"
             method="POST"
-            action="/products/create"
             class="space-y-6"
         >
             <input type="hidden" id="editProductId" />
@@ -402,6 +398,7 @@
     }
 
     // Update product functionality
+    let _categoryId;
     function openEditModal(
         id,
         name,
@@ -409,13 +406,15 @@
         price,
         stock,
         image,
-        category
+        categoryName,
+        categoryId
     ) {
         const decodedName = decodeURIComponent(name);
         const decodedDescription = decodeURIComponent(description);
         const decodedPrice = decodeURIComponent(price);
         const decodedStock = decodeURIComponent(stock);
-        const decodedCategory = decodeURIComponent(category);
+        const decodedCategoryName = decodeURIComponent(categoryName);
+        _categoryId = categoryId;
 
         document.getElementById("editModal").classList.remove("hidden");
         document.getElementById("editProductId").value = id;
@@ -423,21 +422,52 @@
         document.getElementById("editDescription").value = decodedDescription;
         document.getElementById("editPrice").value = decodedPrice;
         document.getElementById("editStock").value = decodedStock;
-        document.getElementById("editCategory").value = decodedCategory;
 
-        // Handle image preview (optional)
+        // Handle image preview and label update
+        const imageElement = document.getElementById("previewContainer");
         if (image) {
-            const imageElement = document.getElementById("previewContainer");
-            imageElement.src = `/products/${image}`;
-            imageElement.classList.remove("hidden");
+            // Update the preview with the existing image
+            imageElement.style.backgroundImage = `url('/products/${image}')`;
+            imageElement.style.backgroundSize = "cover";
+            imageElement.style.backgroundPosition = "center";
+            imageElement.style.backgroundRepeat = "no-repeat";
+        } else {
+            // Reset to default if no image is passed
+            imageElement.style.backgroundImage = "none";
+            imageElement.innerHTML = `
+            <div class="flex flex-col items-center justify-center">
+                <svg
+                    class="w-12 h-12 text-gray-400 group-hover:text-[#c05bc6] transition"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    ></path>
+                </svg>
+                <p
+                    class="text-sm text-gray-500 group-hover:text-[#c05bc6] mt-2 transition"
+                >
+                    Click to upload
+                </p>
+            </div>
+        `;
         }
 
         // Select the correct category in the dropdown
         const categorySelect = document.getElementById("editCategory");
-        categorySelect.value = categoryId;
+        categorySelect.options[categorySelect.selectedIndex].textContent =
+            decodedCategoryName;
 
         // Dynamically set the form action URL with the product ID
         document.getElementById("editProductForm").action = `/products/${id}`;
+        document.getElementById("editProductForm").enctype =
+            "multipart/form-data";
 
         document.body.classList.add("overflow-hidden");
     }
@@ -447,42 +477,79 @@
         document.body.classList.remove("overflow-hidden");
     }
 
+    // handle image change events
+    const imageUpload = document.getElementById("productImage");
+    const previewContainer = document.getElementById("previewContainer");
+
+    // Create a new form data object to hold the product data and image file
+    const formData = new FormData();
+
+    // Custom click handling for file upload
+    imageUpload.addEventListener("change", () => {
+        const file = imageUpload.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const preview = document.createElement("img");
+                preview.src = e.target.result;
+                preview.alt = "Product Image Preview";
+                preview.classList.add(
+                    "h-[50%]",
+                    "w-full",
+                    "object-cover",
+                    "rounded-lg"
+                );
+
+                preview.style.maxHeight = "300px";
+                preview.style.width = "auto";
+                preview.style.objectFit = "contain";
+
+                // Clear any previous background image and preview content
+                previewContainer.style.backgroundImage = "none";
+                previewContainer.style.backgroundSize = "";
+                previewContainer.style.backgroundPosition = "";
+                previewContainer.style.backgroundRepeat = "";
+                previewContainer.innerHTML = "";
+
+                // Append the new preview image
+                previewContainer.appendChild(preview);
+
+                // add image file to the form data
+                formData.append("productImage", file);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
     function handleEditProductFormSubmit(closeModalFunction) {
         const productId = document.getElementById("editProductId").value;
-        const title = document.getElementById("editTitle").value;
+        const name = document.getElementById("editName").value;
         const description = document.getElementById("editDescription").value;
         const price = document.getElementById("editPrice").value;
         const stock = document.getElementById("editStock").value;
-        const categories = document
-            .getElementById("editCategory")
-            .value.split(",")
-            .map((category) => category.trim());
 
         // Prepare the data to be sent
-        const productData = {
-            name: title,
-            description,
-            price: parseFloat(price),
-            stock: parseInt(stock, 10),
-            category,
-        };
+        formData.append("name", name);
+        formData.append("description", description);
+        formData.append("price", parseFloat(price));
+        formData.append("stock", parseInt(stock, 10));
+        formData.append("categoryId", _categoryId);
+
+        console.log(formData);
 
         // Send data to the server using fetch
-        async function updateProduct(id, productData) {
+        async function updateProduct(id, formData) {
             try {
                 const response = await fetch(`/products/${id}`, {
                     method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(productData),
+                    body: formData,
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
                     alert("Product updated successfully!");
-                    window.location.reload(); // Reload the page to reflect the changes
+                    window.location.reload();
                 } else {
                     alert("Error updating product: " + data.message);
                 }
@@ -492,7 +559,7 @@
             }
         }
 
-        updateProduct(productId, productData);
+        updateProduct(productId, formData);
 
         // Call the provided close modal function
         if (typeof closeModalFunction === "function") {
@@ -535,7 +602,7 @@
         // Add options from the refinedCategories array
         refinedCategories.forEach((category) => {
             const option = document.createElement("option");
-            option.value = category.id;
+            option.value = category._id;
             option.textContent = category.name;
             categorySelect.appendChild(option);
         });

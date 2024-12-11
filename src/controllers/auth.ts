@@ -90,8 +90,13 @@ class AuthController {
             }
         );
 
-        // set token inside the authorization headers
-        res.setHeader("Authorization", `Bearer ${token}`);
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 60 * 60 * 1000,
+            sameSite: true,
+        });
+
         res.redirect("/products");
     }
 
@@ -100,7 +105,11 @@ class AuthController {
     }
 
     // logout endpoint
-    static async logout(req: Request, res: Response) {}
+    static async logout(req: Request, res: Response) {
+        res.clearCookie("token");
+
+        res.json({ success: true });
+    }
 
     static async forgotPassword(req: Request, res: Response) {
         const result = requestBodyErrorsInterrupt(req, res);
