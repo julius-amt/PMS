@@ -34,13 +34,8 @@ const ProductSchema = new Schema<IProduct>(
 );
 
 // Add the static method
-ProductSchema.statics.filterProductsByCategory = async function (
-    categoryName: string
-) {
-    return await this.find()
-        .populate("category")
-        .where("category.name")
-        .equals(categoryName);
+ProductSchema.statics.filterProductsByCategory = async function (categoryId) {
+    return await this.find({ category: categoryId }).populate("category");
 };
 
 const Product = (models.Product ||

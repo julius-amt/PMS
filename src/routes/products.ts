@@ -21,7 +21,8 @@ router.put(
 router.delete("/:productId", ProductController.deleteProduct);
 
 router.get("/", ProductController.listAll);
-router.get("/create", ProductController.createProductPage); // the arrangement of these 2 routes is intentional here
+router.post("/search", ProductController.queryProductByNameOrDesc); // the arrangement of these 3 last routes is intentional left in this position
+router.get("/create", ProductController.createProductPage);
 router.get("/:productId", ProductController.productDetailsPage);
 
 export { router as productRouter };

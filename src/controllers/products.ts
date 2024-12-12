@@ -13,42 +13,51 @@ class ProductController {
     }
 
     static async listAll(req: Request, res: Response) {
-        const { categoryId } = req.query;
+        const { categoryId, sortBy } = req.query;
+        console.log(`Is category ${categoryId} and sort by ${sortBy}`);
 
-        if (categoryId) {
-            if (!Types.ObjectId.isValid(categoryId as string)) {
-                res.status(400).render("./products/products");
-                return;
+        try {
+            let sortOption = {};
+            if (sortBy === "title-asc") {
+                sortOption = { name: 1 }; // Ascending order
+            } else if (sortBy === "title-desc") {
+                sortOption = { name: -1 }; // Descending order
             }
 
-            try {
-                // Validate and find the category
-                const _category = await Category.findById(categoryId);
-                if (!_category) {
-                    res.status(404).json({ message: "Category not found!" });
+            if (categoryId) {
+                // If categoryId exists, validate and fetch filtered products by category
+                if (!Types.ObjectId.isValid(categoryId as string)) {
+                    res.status(400).render("./products/products");
                     return;
                 }
 
-                const filteredProducts = await Product.filterProductsByCategory(
-                    _category.name
-                );
+                const _category = await Category.findById(categoryId);
+                if (!_category) {
+                    res.status(404).render("./products/products", {
+                        error: "Category not found!",
+                    });
+                    return;
+                }
+
+                // Filter products by category and apply sorting
+                const filteredProducts = await Product.find({
+                    category: _category._id,
+                }).sort(sortOption);
 
                 res.render("./products/products", {
                     products: filteredProducts,
                 });
                 return;
-            } catch (err: any) {
-                console.error(
-                    "Error filtering products by category:",
-                    err.message
-                );
-                res.status(500).json({ message: "Internal Server Error" });
-                return;
             }
+
+            const allProducts = await Product.find({}).sort(sortOption);
+            res.render("./products/products", {
+                products: allProducts,
+            });
+        } catch (err: any) {
+            console.error("Error fetching products:", err.message);
+            res.status(500).json({ message: "Internal Server Error" });
         }
-        res.render("./products/products", {
-            products: await ProductController.products(),
-        });
     }
 
     static async createProduct(req: Request, res: Response) {
@@ -124,6 +133,7 @@ class ProductController {
             const product = await Product.findById(productId).populate(
                 "category"
             );
+            console.log("Simgle product found", product);
 
             if (!product) {
                 res.status(404).json({ message: "Product not found!" });
@@ -240,7 +250,7 @@ class ProductController {
                     category: new Types.ObjectId(categoryId),
                     price,
                     stock,
-                    image: image?.filename,
+                    image: image!.filename,
                 },
                 { new: true }
             );
@@ -275,6 +285,35 @@ class ProductController {
             res.status(500).json({
                 message: "Internal Server Error",
                 success: false,
+            });
+        }
+    }
+
+    static async queryProductByNameOrDesc(req: Request, res: Response) {
+        const { query } = req.body;
+        console.log("Search query is:", query);
+
+        if (!query) {
+            return res.render("./products/search-result", {
+                error: "Please enter a search query",
+            });
+        }
+
+        try {
+            const products = await Product.find({
+                $or: [
+                    { name: { $regex: query, $options: "i" } },
+                    { description: { $regex: query, $options: "i" } },
+                ],
+            });
+
+            res.render("./products/search-result", {
+                searchProducts: products,
+            });
+        } catch (error) {
+            res.status(500).render("./products/products", {
+                products: await ProductController.products(),
+                error: "Error fetching products",
             });
         }
     }
