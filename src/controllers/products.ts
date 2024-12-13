@@ -56,7 +56,9 @@ class ProductController {
             });
         } catch (err: any) {
             console.error("Error fetching products:", err.message);
-            res.status(500).json({ message: "Internal Server Error" });
+            res.status(500).render("./products/products", {
+                message: "Internal Server Error",
+            });
         }
     }
 
@@ -125,7 +127,9 @@ class ProductController {
 
         // Validate productId
         if (!Types.ObjectId.isValid(productId)) {
-            res.status(400).json({ message: "Invalid Product ID" });
+            res.status(400).render("./products/detail", {
+                message: "Invalid Product ID",
+            });
             return;
         }
 
@@ -136,7 +140,9 @@ class ProductController {
             console.log("Simgle product found", product);
 
             if (!product) {
-                res.status(404).json({ message: "Product not found!" });
+                res.status(404).render("./products/detail", {
+                    message: "Product not found!",
+                });
                 return;
             }
 

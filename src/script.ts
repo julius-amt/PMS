@@ -8,6 +8,7 @@ import expressLayouts from "express-ejs-layouts";
 import { authenticatedUser } from "./utils/middleware/verifyToken";
 import { userInfoRouter } from "./routes/userInfo";
 import cookieParser from "cookie-parser";
+import { _404Router } from "./routes/404";
 import "dotenv/config";
 
 const app = express();
@@ -36,6 +37,8 @@ app.use("/products", categoryRouter);
 app.use("/products", productRouter);
 app.use("/users", userInfoRouter);
 
+// handle 404
+app.use("*", _404Router);
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
