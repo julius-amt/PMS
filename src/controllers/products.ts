@@ -199,13 +199,11 @@ class ProductController {
     }
 
     static async updateProduct(req: Request, res: Response) {
-        // Handle validation errors using the custom middleware
         const result = requestBodyErrorsInterrupt(req, res);
         if (result) return;
 
         const { productId } = req.params;
 
-        // Validate productId
         if (!Types.ObjectId.isValid(productId)) {
             res.status(400).json({
                 message: "Invalid Product ID",
@@ -217,15 +215,6 @@ class ProductController {
         const { name, description, categoryId, price, stock } =
             matchedData(req);
 
-        if (!Types.ObjectId.isValid(categoryId)) {
-            res.status(400).json({
-                message: "Invalid category ID",
-                success: false,
-            });
-            return;
-        }
-
-        // Check if category exists
         const categoryExist = await Category.findById(categoryId);
         if (!categoryExist) {
             res.status(400).json({
@@ -235,11 +224,21 @@ class ProductController {
             return;
         }
 
-        // set image file
         const image = req.file;
-
-        //get old image file path to be removed from server
         const oldProductInfo = await Product.findById(productId);
+
+        if (!oldProductInfo) {
+            res.status(404).json({
+                message: "Product not found",
+                success: false,
+            });
+            return;
+        }
+
+        const pathToOldImage = path.resolve(
+            path.resolve(__dirname, "..", "..", "public", "products"),
+            oldProductInfo.image as string
+        );
 
         try {
             const product = await Product.findByIdAndUpdate(
@@ -250,23 +249,10 @@ class ProductController {
                     category: new Types.ObjectId(categoryId),
                     price,
                     stock,
-                    image: image!.filename,
+                    image: image?.filename ?? oldProductInfo.image,
                 },
                 { new: true }
             );
-
-            // remove old omage from server
-            const pathToOldImage = path.resolve(
-                __dirname,
-                "..",
-                "..",
-                "public",
-                "products",
-                oldProductInfo?.image as string
-            );
-
-            console.log(pathToOldImage);
-            fs.unlinkSync(pathToOldImage);
 
             if (!product) {
                 res.status(404).json({
@@ -276,12 +262,21 @@ class ProductController {
                 return;
             }
 
+            // Remove old image file if a new one was uploaded
+            if (image && fs.existsSync(pathToOldImage)) {
+                fs.unlink(pathToOldImage, (err) => {
+                    if (err) console.error("Error deleting old image:", err);
+                });
+            }
+
             res.status(200).json({
                 message: "Product updated successfully",
                 success: true,
                 product,
+                imageUpdated: !!image?.filename,
             });
         } catch (error) {
+            console.error("Error:", error);
             res.status(500).json({
                 message: "Internal Server Error",
                 success: false,
