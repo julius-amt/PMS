@@ -187,7 +187,7 @@ This application is designed with scalability and extensibility in mind, allowin
 
 ---
 
-## API Routes
+## Some API Routes
 
 | Route               | Method | Description              | Auth Required |
 | ------------------- | ------ | ------------------------ | ------------- |
@@ -208,7 +208,11 @@ Create a `.env` file in the project root and add the following:
 MONGO_URI=<your_mongo_database_uri>
 JWT_SECRET=<your_jwt_secret_key>
 EMAIL_HOST=<your_email
-
+EMAIL_PORT=####
+EMAIL_SECURE=<boolean>
+EMAIL_USER=<your_email>
+EMAIL_PASS=<your_password>
+BASE_URL=<your_base_url>
 ```
 
 ---

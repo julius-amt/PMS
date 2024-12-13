@@ -12,6 +12,8 @@ import { handleUnprotectedRoutesFromAuthUsers } from "@/utils/middleware/handleU
 
 const router = Router();
 
+router.get("/logout", AuthController.logout);
+
 router.use(handleUnprotectedRoutesFromAuthUsers);
 router.post("/login", checkSchema(loginValidationSchema), AuthController.login);
 router.post(
@@ -33,7 +35,6 @@ router.post(
 
 router.get("/login", AuthController.loginPage);
 router.get("/signup", AuthController.signupPage);
-router.get("/logout", AuthController.logout);
 router.get("/forgot-password", AuthController.forgotPasswordPage);
 router.get("/reset-password", AuthController.resetPasswordPage);
 
