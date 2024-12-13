@@ -133,14 +133,18 @@
             </div>
 
             <div class="px-4 py-6 border-t border-gray-200 space-y-2">
-                <a
-                    class="flex items-center px-4 py-3 text-gray-700 hover:bg-[#ecd6f7] rounded-lg transition-all duration-300 ease-in-out"
-                >
-                    <i
-                        class="ri-settings-3-line mr-3 text-xl text-gray-500"
-                    ></i>
-                    <span class="font-medium">Settings</span>
-                </a>
+                <!-- user info -->
+                <div class="flex justify-around items-center">
+                    <img
+                        id="user-avatar"
+                        src=""
+                        alt="User Avatar"
+                        class="w-10 h-10 rounded-full mr-3"
+                    />
+                    <h3 id="user-name" class="font-bold text-xl text-gray-800">
+                        Loading...
+                    </h3>
+                </div>
                 <a
                     onclick="logoutUser()"
                     class="cursor-pointer flex items-center px-4 py-3 text-gray-700 hover:bg-[#ecd6f7] rounded-lg transition-all duration-300 ease-in-out"
@@ -179,6 +183,41 @@
                     alert("Error logging out. Please try again.");
                 }
             }
+
+            // get user information
+            // Get user information
+            async function getUserInfo() {
+                try {
+                    const response = await fetch("/users/me", {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+
+                        // Populate the user information fields
+                        document.getElementById("user-name").textContent =
+                            data.user.username.toUpperCase();
+                        document.getElementById("user-avatar").src =
+                            "/avatars/" + data.user.avatar;
+                    } else {
+                        alert(
+                            "Failed to retrieve user information. Please check your connection."
+                        );
+                    }
+                } catch (error) {
+                    console.error("Error retrieving user information:", error);
+                    alert(
+                        "Error retrieving user information. Please try again."
+                    );
+                }
+            }
+
+            // Fetch user information on page load
+            document.addEventListener("DOMContentLoaded", getUserInfo);
         </script>
     </body>
 </html>

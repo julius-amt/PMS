@@ -6,6 +6,7 @@ import { categoryRouter } from "@/routes/categories";
 import path from "path";
 import expressLayouts from "express-ejs-layouts";
 import { authenticatedUser } from "./utils/middleware/verifyToken";
+import { userInfoRouter } from "./routes/userInfo";
 import cookieParser from "cookie-parser";
 import "dotenv/config";
 
@@ -33,6 +34,7 @@ app.use("/auth", authRouter);
 app.use(authenticatedUser);
 app.use("/products", categoryRouter);
 app.use("/products", productRouter);
+app.use("/users", userInfoRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
